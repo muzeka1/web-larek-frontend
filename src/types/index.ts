@@ -8,11 +8,19 @@ export interface Product {
 }
 
 export enum ProductCategory {
-    soft = "софт-скил",
-    other = "другое",
-    additional = "дополнительное",
-    button = "кнопка",
-    hard = "хард-скил"
+    soft = "card__category_soft",
+    other = "card__category_other",
+    additional = "card__category_additional",
+    button = "card__category_button",
+    hard = "card__category_hard"
+}
+
+export interface ProductCategorySettings {
+    soft: string,
+    other: string,
+    additional: string,
+    button: string,
+    hard: string
 }
 
 export interface ProductList {
