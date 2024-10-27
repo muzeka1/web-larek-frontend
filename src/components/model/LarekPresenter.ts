@@ -35,6 +35,7 @@ export class Presenter {
         this.productCartTemplate = document.querySelector('#card-basket')
         this.cartTemplate = document.querySelector('#basket')
         this.succesTemplate = document.querySelector('#success')
+        this.productPreviewTemplate = document.querySelector('#card-preview')
     }
 
     init() {

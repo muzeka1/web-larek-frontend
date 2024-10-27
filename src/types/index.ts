@@ -69,24 +69,20 @@ export interface AppState {
     errorMessage: string | null;
     isValid: boolean;
 
-    loadProducts(): Promise<void>;
-    loadProduct(id: string): Promise<Product>;
-    orderProcuts(): Promise<OrderResult>;
-
-    addToCart(id: string): void;
+    addProduct(id: string): void;
     removeProduct(id: string): void;
     fillContacts(contacts: Contacts): void;
-    fillOrderInfo(orderInfo: OrderInfo): void;
+    fillOrder(orderInfo: OrderInfo): void;
     isValidContacts(): boolean;
-    isValidOrderInfo(): boolean;
-    validateContacts(contacts: Contacts): string | null;
-    validateOrderInfo(orderInfo: OrderInfo): string | null;
+    isValidOrder(): boolean;
+    validateContactsHandler(contacts: Contacts): string | null;
+    validateOrderHandler(orderInfo: OrderInfo): string | null;
+    setMessage(message: string | null, isValid: boolean): void;
 
     getProduct(id: string): Product;
     getCartProduct(id: string): Product;
     getProducts(): Map<string, Product>;
 
-    setMessage(message: string | null, isValid: boolean): void;
 }
 
 export interface AppStateConstructor {

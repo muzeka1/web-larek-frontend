@@ -45,6 +45,8 @@ export class AppStateModel implements AppState {
         }
     }
 
+    // Добавить методы для добавление элементов в объекты корзины и списка товаров
+
     getProduct(id: string): Product {
         return this.products.get(id)
     }
@@ -57,36 +59,7 @@ export class AppStateModel implements AppState {
         return this.cart.get(id)
     }
 
-    async loadProducts(): Promise<void> {
-        this.products.clear;
-        const productList = await this.api.getProducts()
-        for (const product of productList) {
-            this.products.set(product.id, product)
-        }
-    }
-
-    async orderProcuts(): Promise<OrderResult> {
-        try {
-			const orderResult = await this.api.makeOrder(this.order)
-			this.cart.clear();
-			return orderResult;
-		} catch (err: unknown) {
-			if (err instanceof Error) {
-				this.setMessage(err.message, true);
-			}
-			if (typeof err === 'string') {
-				this.setMessage(err, true);
-			}
-			return;
-		}
-    }
-
-    async loadProduct(id: string): Promise<Product> {
-        const product = await this.api.getProduct(id)
-        return product
-    }
-
-    addToCart(id: string): void {
+    addProduct(id: string): void {
         this.cart.set(id, this.getProduct(id))
     }
 
@@ -103,11 +76,11 @@ export class AppStateModel implements AppState {
         this.contacts = contacts
     };
 
-    fillOrderInfo(orderInfo: OrderInfo): void {
+    fillOrder(orderInfo: OrderInfo): void {
         this.orderInfo = orderInfo
     }
 
-    validateContacts(contacts: Contacts): string | null {
+    validateContactsHandler(contacts: Contacts): string | null {
         const errors: string[] = [];
 		if (!contacts.email || !contacts.phoneNumber) {
 			errors.push('Email и телефон обязательные поля');
@@ -127,7 +100,7 @@ export class AppStateModel implements AppState {
 		return null;
     }
 
-    validateOrderInfo(orderInfo: OrderInfo): string | null {
+    validateOrderHandler(orderInfo: OrderInfo): string | null {
         const errors: string[] = [];
         if (!orderInfo.address || !orderInfo.paymentMethod) {
             errors.push('Необходимо выбрать способ оплаты и заполнить адрес')
@@ -139,7 +112,7 @@ export class AppStateModel implements AppState {
     }
 
     isValidContacts(): boolean {
-        const error = this.validateContacts(this.contacts)
+        const error = this.validateContactsHandler(this.contacts)
         if (error) {
             this.setMessage(error, false);
             return true
@@ -149,8 +122,8 @@ export class AppStateModel implements AppState {
         }
     }
 
-    isValidOrderInfo(): boolean {
-        const error = this.validateOrderInfo(this.orderInfo)
+    isValidOrder(): boolean {
+        const error = this.validateOrderHandler(this.orderInfo)
         if (error) {
             this.setMessage(error, false);
             return true
