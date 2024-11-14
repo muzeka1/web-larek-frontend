@@ -1,24 +1,27 @@
-import { AppState, Contacts, ILarekApi, OrderResult, Product } from "../../types";
+import { AppState, Contacts, OrderResult, Product } from "../../types";
 import { Order, AppStateModals, OrderInfo} from "../../types";
 
 export class AppStateModel implements AppState {
-    products: Map<string, Product> = new Map<string, Product>();
-    cart: Map<string, Product> = new Map<string, Product>();
+    products: Map<string, Product>;
+    cart: Map<string, Product>;
     contacts: Contacts = {
         email: "",
-        phoneNumber: "",
+        phone: "",
     };
     
     orderInfo: OrderInfo = {
         address: "",
-        paymentMethod: null
+        payment: null
     };
 
     openedModal: AppStateModals = AppStateModals.none;
     errorMessage: string | null = null;
     isValid = false;
     
-    constructor(protected api: ILarekApi) {}
+    constructor() {
+        this.products = new Map<string, Product>();
+        this.cart = new Map<string, Product>();
+    }
     
     get cartTotal(): number {
         let total = 0;
@@ -45,7 +48,22 @@ export class AppStateModel implements AppState {
         }
     }
 
-    // Добавить методы для добавление элементов в объекты корзины и списка товаров
+    get orderResult(): Order {
+        return {
+            ...this.contacts,
+            ...this.orderInfo,
+            total: this.cartTotal,
+            items: this.getCartProducts().map(item => {
+                return item.id
+            })
+        }
+    }
+
+    setProducts(data: Product[]): void {
+        data.forEach(item => {
+            this.products.set(item.id, item)
+        })
+    }
 
     getProduct(id: string): Product {
         return this.products.get(id)
@@ -59,8 +77,14 @@ export class AppStateModel implements AppState {
         return this.cart.get(id)
     }
 
+    getCartProducts(): Product[] {
+        return [...this.cart.values()]
+    }
+
     addProduct(id: string): void {
-        this.cart.set(id, this.getProduct(id))
+        if (!this.cart.get(id)) {
+            this.cart.set(id, this.getProduct(id))
+        }
     }
 
     removeProduct(id: string): void {
@@ -82,7 +106,7 @@ export class AppStateModel implements AppState {
 
     validateContactsHandler(contacts: Contacts): string | null {
         const errors: string[] = [];
-		if (!contacts.email || !contacts.phoneNumber) {
+		if (!contacts.email || !contacts.phone) {
 			errors.push('Email и телефон обязательные поля');
 		}
 		if (
@@ -91,7 +115,7 @@ export class AppStateModel implements AppState {
 		) {
 			errors.push('Некорректный email');
 		}
-		if (contacts.phoneNumber && !/^\+?[0-9]{10,14}$/.test(contacts.phoneNumber)) {
+		if (contacts.phone && !/^\+?[0-9]{10,14}$/.test(contacts.phone)) {
 			errors.push('Некорректный телефон');
 		}
 		if (errors.length) {
@@ -102,7 +126,7 @@ export class AppStateModel implements AppState {
 
     validateOrderHandler(orderInfo: OrderInfo): string | null {
         const errors: string[] = [];
-        if (!orderInfo.address || !orderInfo.paymentMethod) {
+        if (!orderInfo.address || !orderInfo.payment) {
             errors.push('Необходимо выбрать способ оплаты и заполнить адрес')
         }
         if (errors.length) {

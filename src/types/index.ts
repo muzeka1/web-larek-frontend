@@ -7,6 +7,14 @@ export interface Product {
     price: number;
 }
 
+export interface ProductPreview {
+    description: string;
+    image: string;
+    title: string;
+    category: string;
+    price: number;
+}
+
 export enum ProductCategory {
     soft = "card__category_soft",
     other = "card__category_other",
@@ -29,13 +37,13 @@ export interface ProductList {
 }
 
 export interface OrderInfo {
-    paymentMethod?: "online" | "uponReceipt" | null;
+    payment: "online" | "cash" | null;
     address: string;
 }
 
 export interface Contacts {
     email: string;
-    phoneNumber: string;
+    phone: string;
 }
 
 export interface Order extends Contacts, OrderInfo {
@@ -56,6 +64,14 @@ export enum AppStateModals {
     none = "none"
 }
 
+export enum AppStateChanges {
+    modal = "change:modal",
+    product = "change:product",
+    payment = "change:payment",
+    input = "change:input",
+    submit = "change:submit"
+}
+
 export interface AppState {
     products: Map<string, Product>;
     cart: Map<string, Product>;
@@ -68,6 +84,9 @@ export interface AppState {
     openedModal: AppStateModals;
     errorMessage: string | null;
     isValid: boolean;
+    orderResult: Order;
+
+    setProducts(data: Product[]): void;
 
     addProduct(id: string): void;
     removeProduct(id: string): void;
@@ -81,6 +100,7 @@ export interface AppState {
 
     getProduct(id: string): Product;
     getCartProduct(id: string): Product;
+    getCartProducts(): Product[];
     getProducts(): Map<string, Product>;
 
 }

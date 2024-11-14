@@ -1,8 +1,11 @@
-import { Product } from "../../types";
+import { AppStateChanges, Product } from "../../types";
+import { EventEmitter, IEvents } from "../base/events";
 
-export interface IProductPreView {
-    setAddHandler(handlerOpenPreview: Function): void;
+export interface IProductPreView extends IEvents{
+    id: string;
+    inCartState: boolean;
     render(): HTMLButtonElement;
+    changeButtonState(): void;
     setContent(data: Product): void;
 }
 
@@ -10,7 +13,7 @@ export interface IProductPreViewConstructor {
     new (productCatalogTemplate: HTMLTemplateElement): IProductPreView;
 }
 
-export class ProductPreView implements IProductPreView{
+export class ProductPreView extends EventEmitter implements IProductPreView{
     protected productElement: HTMLButtonElement;
     protected categoryProduct: HTMLSpanElement;
     protected titleProduct: HTMLTitleElement;
@@ -18,16 +21,35 @@ export class ProductPreView implements IProductPreView{
     protected imageProduct: HTMLImageElement;
     protected priceProduct: HTMLSpanElement;
     protected addToCartButton: HTMLButtonElement;
-    protected handleAddToCart: Function;
+    protected _id: string;
+    protected _inCart: boolean
 
     constructor(productPreViewTemplate: HTMLTemplateElement) {
+        super();
         this.productElement = productPreViewTemplate.content.querySelector('.card').cloneNode(true) as HTMLButtonElement;
         this.categoryProduct = this.productElement.querySelector('.card__category');
         this.titleProduct = this.productElement.querySelector('.card__title');
         this.descriptionProduct = this.productElement.querySelector('.card__text')
         this.imageProduct = this.productElement.querySelector('.card__image');
         this.priceProduct = this.productElement.querySelector('.card__price');
-        this.addToCartButton = this.priceProduct.querySelector('.button');
+        this.addToCartButton = this.productElement.querySelector('.button');
+
+        this.addToCartButton.addEventListener('click', () => {
+            this.changeButtonState()
+            this.emit(AppStateChanges.product, {id: this._id, handler: this.changeButtonState.bind(this)})
+        })
+    }
+
+    set id(id: string) {
+        this._id = id;
+    }
+
+    get inCartState() {
+        return this._inCart
+    }
+
+    set inCartState(inCart: boolean) {
+        this._inCart = inCart;
     }
 
     setContent(data: Product): void {
@@ -35,14 +57,12 @@ export class ProductPreView implements IProductPreView{
         this.titleProduct.textContent = data.title;
         this.descriptionProduct.textContent = data.description
         this.imageProduct.src = data.image;
-        this.priceProduct.textContent = String(data.price)
+        this.priceProduct.textContent = data.price != null ? `${String(data.price)} синапсов` : "Бесценно";
     }
-
-    setAddHandler(handleAddToCart: Function): void {
-        this.handleAddToCart = handleAddToCart
-        this.addToCartButton.addEventListener('click', () => {
-            this.handleAddToCart(this)
-        })
+    
+    changeButtonState(): void {
+        this._inCart ? this.addToCartButton.textContent = "Убрать" : this.addToCartButton.textContent = "В корзину";
+        this._inCart = !this._inCart
     }
 
     render(): HTMLButtonElement {
