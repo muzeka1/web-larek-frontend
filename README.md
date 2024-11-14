@@ -53,7 +53,7 @@ npm run build
 - **`productCatalogConstructor`**: Конструктор для отображения каталога продуктов (`IProductCatalogViewConstructor`)
 - **`productCartConstructor`**: Конструктор для отображения корзины продуктов (`ICartProductConstructor`)
 - **`succesViewConstructor`**: Конструктор для отображения успешного сообщения (`ISuccesViewConstructor`)
-- **`cartViewConstructor`**: Конструктор для отображения корзины (`ICartConstructor`).
+- **`cart`**: Объект отображения корзнины (`ICart`).
 - **`productPreView`**: Конструктор для предварительного просмотра продуктов (`IProductPreViewConstructor`)
 
 ## Бизнес-логика проекта
@@ -63,9 +63,9 @@ npm run build
 Реализует удаление и добавление элементов в объекте корзины.
 
 Класс имеет такие методы: 
-- **`setProducts, setProduct`** - добавляют товары в общий список
-- **`addProduct, removeProduct, fillContacts, fillOrderInfo, isValidContacts, isValidOrderInfo, validateContactsHandler, validateOrderHandler, setMessage`** - добавляет продукт в корзину, убирает из нее, заполняет формы ранее заполненными пользователем данными, проверяет поля ввода на валидность, устанавливает сообщение ошибки валидации
-- **`getProduct, getCartProduct, getProducts, setMessage`** - возвращают данные продукта/продуктов
+- **`setProducts`** - добавляет товары в общий список
+- **`addProduct, removeProduct, fillContacts, fillOrderInfo, isValidContacts, isValidOrder, validateContactsHandler, validateOrderHandler, setMessage`** - добавляет продукт в корзину, убирает из нее, заполняет формы ранее заполненными пользователем данными, проверяет поля ввода на валидность, устанавливает сообщение ошибки валидации
+- **`getProduct, getCartProduct, getCartProducts, getProducts`** - возвращают данные продукта/продуктов
 
 ## Компоненты отображение
 
