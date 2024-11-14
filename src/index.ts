@@ -37,8 +37,6 @@ const modal = new Modal(modalElement);
 const pageView = new Page(page);
 const cart = new Cart(cartTemplate);
 
-
-
 export class Presenter {
     protected form: IForm;
     protected addToCartCurrentButtno: HTMLButtonElement;
@@ -133,7 +131,13 @@ export class Presenter {
 
     onPlaceOrder() {
         this.modal.close();
+        const orderInfoData = JSON.parse(localStorage.getItem("formOrderValues")) as OrderInfo;
         const formOrder = new this.formOrderConstructor(orderFormTemplate);
+        if (orderInfoData) {
+            this.model.orderInfo = orderInfoData;
+            formOrder.setValues(this.model.orderInfo)
+            formOrder.togglePaymentButtonsState()
+        }
         this.form = formOrder;
         this.model.isValidOrder();
         formOrder.toggleButtonState(this.model.isValid)
@@ -152,7 +156,13 @@ export class Presenter {
 
     onOrderSubmit() {
         this.modal.close();
+        localStorage.setItem("formOrderValues", JSON.stringify(this.model.orderInfo));
+        const contactsInfoData = JSON.parse(localStorage.getItem("formContactsValues")) as Contacts;
         const formContacts = new this.formContactsConstructor(contactsFormTemplate);
+        if (contactsInfoData) {
+            this.model.contacts = contactsInfoData;
+            formContacts.setValues(this.model.contacts)
+        }
         this.form = formContacts;
         this.model.isValidContacts();
         formContacts.toggleButtonState(this.model.isValid);
@@ -171,6 +181,7 @@ export class Presenter {
 
     onContactsSubmit() {
         this.modal.close()
+        localStorage.setItem("formContactsValues", JSON.stringify(this.model.contacts));
         this.api.makeOrder(this.model.order)
         .then((data) => {
             const succesWindow = new this.succesViewConstructor(succesTemplate);
@@ -189,5 +200,4 @@ export class Presenter {
 }
 
 const LarekPresenter = new Presenter(api, app, pageView, modal, FormOrder, FormContacts, ProductCatalogView, CartProduct, SuccesView, cart, ProductPreView)
-
 LarekPresenter.init()

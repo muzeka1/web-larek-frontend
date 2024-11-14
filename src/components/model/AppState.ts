@@ -1,4 +1,4 @@
-import { AppState, Contacts, OrderResult, Product } from "../../types";
+import { AppState, Contacts, Product } from "../../types";
 import { Order, AppStateModals, OrderInfo} from "../../types";
 
 export class AppStateModel implements AppState {
