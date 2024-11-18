@@ -73,6 +73,7 @@ export class Presenter {
                 this.pageView.on(AppStateChanges.modal, this.onOpenCart.bind(this));
             })
             .catch(err => {
+                // пока для вывода ошибки используется консоль
                 console.log(err)
             })
 
@@ -189,6 +190,7 @@ export class Presenter {
             succesWindow.on(AppStateChanges.modal, () => {
                 this.modal.close()
             })
+            // пока для вывода заказа используется консоль
             console.log(`ID заказа: ${data.id}`)
             this.modal.modalContent = succesWindow.render();
             this.modal.open();
