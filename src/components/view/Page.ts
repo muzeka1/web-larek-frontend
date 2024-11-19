@@ -6,8 +6,6 @@ export interface IPage extends IEvents{
     galleryContent(items: HTMLElement[]): void;
 }
 
-
-
 export class Page extends EventEmitter implements IPage {
     protected gallery: HTMLElement;
     protected cartButton: HTMLButtonElement;

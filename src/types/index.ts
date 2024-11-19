@@ -15,12 +15,12 @@ export interface ProductPreview {
     price: number;
 }
 
-export enum ProductCategory {
-    soft = "card__category_soft",
-    other = "card__category_other",
-    additional = "card__category_additional",
-    button = "card__category_button",
-    hard = "card__category_hard"
+export const ProductCategory: Record<string, string> = {
+    ["софт-скил"]: "soft",
+    ["другое"]: "other",
+    ["дополнительное"]: "additional",
+    ["кнопка"]: "button",
+    ["хард-скил"]: "hard"
 }
 
 export interface ProductCategorySettings {

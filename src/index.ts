@@ -19,17 +19,18 @@ import { IProductCatalogViewConstructor } from "./components/view/Product";
 import { IProductPreViewConstructor } from "./components/view/ProductPreview";
 import { ISuccesViewConstructor } from "./components/view/Succes";
 import { AppStateChanges } from './types';
+import { ensureElement } from './utils/utils';
 
 const modalElement = document.querySelector('.modal') as HTMLDivElement;
 const page = document.querySelector('.page') as HTMLElement;
 
-const productCatalogTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
-const orderFormTemplate = document.querySelector('#order') as HTMLTemplateElement;
-const contactsFormTemplate = document.querySelector('#contacts') as HTMLTemplateElement;
-const productCartTemplate = document.querySelector('#card-basket') as HTMLTemplateElement;
-const cartTemplate = document.querySelector('#basket') as HTMLTemplateElement;
-const succesTemplate = document.querySelector('#success') as HTMLTemplateElement;
-const productPreviewTemplate = document.querySelector('#card-preview') as HTMLTemplateElement;
+const productCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
+const orderFormTemplate = ensureElement<HTMLTemplateElement>('#order');
+const contactsFormTemplate = ensureElement<HTMLTemplateElement>('#contacts');
+const productCartTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
+const cartTemplate = ensureElement<HTMLTemplateElement>('#basket');
+const succesTemplate = ensureElement<HTMLTemplateElement>('#success');
+const productPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 
 const api = new LarekApi(CDN_URL, API_URL);
 const app = new AppStateModel();
@@ -185,6 +186,8 @@ export class Presenter {
         localStorage.setItem("formContactsValues", JSON.stringify(this.model.contacts));
         this.api.makeOrder(this.model.order)
         .then((data) => {
+            this.model.cart.clear();
+            this.pageView.setCartCount(this.model.cart.size)
             const succesWindow = new this.succesViewConstructor(succesTemplate);
             succesWindow.setTotal(data.total);
             succesWindow.on(AppStateChanges.modal, () => {

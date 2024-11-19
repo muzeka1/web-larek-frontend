@@ -7,10 +7,6 @@ export interface IModal extends IEvents{
     close(): void;
 }
 
-export interface IModalConstructor {
-    new (modalElement: HTMLElement): IModal;
-}
-
 export class Modal extends EventEmitter implements IModal {
     _modalContent: HTMLElement;
     protected buttonClose: HTMLButtonElement;

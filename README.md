@@ -85,21 +85,14 @@ npm run build
 Содержимое модального окна с подробной информацией о товаре
 Для визуального отображения категорий используется:
 ```
-enum ProductCategory {
-    soft = "card__category_soft",
-    other = "card__category_other",
-    additional = "card__category_additional",
-    button = "card__category_button",
-    hard = "card__category_hard"
+export const ProductCategory: Record<string, string> = {
+    ["софт-скил"]: "soft",
+    ["другое"]: "other",
+    ["дополнительное"]: "additional",
+    ["кнопка"]: "button",
+    ["хард-скил"]: "hard"
 }
 
-interface ProductCategorySettings {
-    soft: string,
-    other: string,
-    additional: string,
-    button: string,
-    hard: string
-}
 ```
 
 ### 5. Класс **`Cart`**

@@ -1,4 +1,4 @@
-import { AppStateChanges, Product } from "../../types";
+import { AppStateChanges, Product, ProductCategory } from "../../types";
 import { EventEmitter, IEvents } from "../base/events";
 
 export interface IProductCatalogView extends IEvents{
@@ -26,6 +26,7 @@ export class ProductCatalogView extends EventEmitter implements IProductCatalogV
         this.titleProduct = this.productElement.querySelector('.card__title');
         this.imageProduct = this.productElement.querySelector('.card__image');
         this.priceProduct = this.productElement.querySelector('.card__price');
+        this.categoryProduct = this.productElement.querySelector('.card__category');
 
         this.productElement.addEventListener('click', () => {
             this.emit(AppStateChanges.modal, {id: this._id});
@@ -41,6 +42,7 @@ export class ProductCatalogView extends EventEmitter implements IProductCatalogV
         this.titleProduct.textContent = data.title;
         this.imageProduct.src = data.image;
         this.priceProduct.textContent = data.price != null? `${String(data.price)} синапсов` : "Бесценно";
+        this.categoryProduct.classList.add(`card__category_${ProductCategory[data.category]}`)
     }
 
     render(): HTMLButtonElement {

@@ -1,4 +1,4 @@
-import { AppStateChanges, Product } from "../../types";
+import { AppStateChanges, Product, ProductCategory } from "../../types";
 import { EventEmitter, IEvents } from "../base/events";
 
 export interface IProductPreView extends IEvents{
@@ -33,11 +33,9 @@ export class ProductPreView extends EventEmitter implements IProductPreView{
         this.imageProduct = this.productElement.querySelector('.card__image');
         this.priceProduct = this.productElement.querySelector('.card__price');
         this.addToCartButton = this.productElement.querySelector('.button');
+        this.categoryProduct = this.productElement.querySelector('.card__category');
 
-        this.addToCartButton.addEventListener('click', () => {
-            this.changeButtonState()
-            this.emit(AppStateChanges.product, {id: this._id, handler: this.changeButtonState.bind(this)})
-        })
+        
     }
 
     set id(id: string) {
@@ -57,7 +55,17 @@ export class ProductPreView extends EventEmitter implements IProductPreView{
         this.titleProduct.textContent = data.title;
         this.descriptionProduct.textContent = data.description
         this.imageProduct.src = data.image;
-        this.priceProduct.textContent = data.price != null ? `${String(data.price)} синапсов` : "Бесценно";
+        this.categoryProduct.classList.add(`card__category_${ProductCategory[data.category]}`);
+        if (data.price != null) {
+            this.priceProduct.textContent = `${String(data.price)} синапсов`
+            this.addToCartButton.addEventListener('click', () => {
+                this.changeButtonState()
+                this.emit(AppStateChanges.product, {id: this._id, handler: this.changeButtonState.bind(this)})
+            })
+        } else {
+            this.priceProduct.textContent = "Бесценно"
+            this.addToCartButton.disabled = true;
+        }
     }
     
     changeButtonState(): void {
